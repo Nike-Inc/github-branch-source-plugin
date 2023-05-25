@@ -9,7 +9,9 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-              sh  'git clone https://github.com/raphaelokere/github-branch-source-plugin.git'
+              sh 'git clone https://github.com/raphaelokere/github-branch-source-plugin.git'
+              sh 'cd github-branch-source-plugin'
+              sh 'git checkout credentials'
             }
         }
 
