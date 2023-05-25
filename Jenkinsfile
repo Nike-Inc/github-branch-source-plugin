@@ -1,4 +1,36 @@
-buildPlugin(useContainerAgent: true, configurations: [
-  [platform: 'linux', jdk: 17],
-  [platform: 'windows', jdk: 11],
-])
+pipeline {
+    agent {
+        docker {
+            image 'maven:latest'
+            reuseNode true
+        }
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git '<repository_url>'
+            }
+        }
+
+        stage('Build Plugin') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Install Plugin') {
+            steps {
+                script {
+                    def pluginFile = findFiles(glob: 'target/*.hpi').get(0)
+                    if (pluginFile != null) {
+                        jenkins.installPlugin(pluginFile.path)
+                        jenkins.restart()
+                    } else {
+                        error 'Plugin file not found'
+                    }
+                }
+            }
+        }
+    }
+}
