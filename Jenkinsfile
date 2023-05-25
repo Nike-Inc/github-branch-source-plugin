@@ -7,6 +7,11 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+              cleanWs() // Clean workspace
+            }
+        }
         stage('Clone Repository') {
             steps {
               sh 'git clone https://github.com/raphaelokere/github-branch-source-plugin.git'
