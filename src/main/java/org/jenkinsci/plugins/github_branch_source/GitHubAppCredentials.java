@@ -51,8 +51,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.verb.POST;
 
 @SuppressFBWarnings(value = "SE_NO_SERIALVERSIONID", justification = "XStream")
-public class GitHubAppCredentials extends BaseStandardCredentials
-    implements StandardUsernamePasswordCredentials {
+public class GitHubAppCredentials extends BaseStandardCredentials implements IGitHubAppCredentials {
 
   private static final Logger LOGGER = Logger.getLogger(GitHubAppCredentials.class.getName());
 
@@ -117,11 +116,13 @@ public class GitHubAppCredentials extends BaseStandardCredentials
   }
 
   @NonNull
+  @Override
   public String getAppID() {
     return appID;
   }
 
   @NonNull
+  @Override
   public Secret getPrivateKey() {
     return privateKey;
   }
@@ -136,17 +137,20 @@ public class GitHubAppCredentials extends BaseStandardCredentials
    * @return the owner of the organisation or null.
    */
   @CheckForNull
+  @Override
   public String getOwner() {
     return owner;
   }
 
   @DataBoundSetter
+  @Override
   public void setOwner(String owner) {
     this.owner = Util.fixEmpty(owner);
   }
 
   @SuppressWarnings("deprecation")
-  AuthorizationProvider getAuthorizationProvider() {
+  @Override
+  public AuthorizationProvider getAuthorizationProvider() {
     return new CredentialsTokenProvider(this);
   }
 

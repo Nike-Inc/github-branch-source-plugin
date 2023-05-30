@@ -223,7 +223,7 @@ public class Connector {
           GitHub connector = Connector.connect(apiUri, credentials);
           try {
             try {
-              boolean githubAppAuthentication = credentials instanceof GitHubAppCredentials;
+              boolean githubAppAuthentication = credentials instanceof IGitHubAppCredentials;
               if (githubAppAuthentication) {
                 int remaining = connector.getRateLimit().getRemaining();
                 return FormValidation.ok("GHApp verified, remaining rate limit: %d", remaining);
@@ -377,7 +377,7 @@ public class Connector {
     final String password;
     final String hash;
     final String authHash;
-    final GitHubAppCredentials gitHubAppCredentials;
+    final IGitHubAppCredentials gitHubAppCredentials;
     final Jenkins jenkins = Jenkins.get();
     if (credentials == null) {
       username = null;
@@ -385,9 +385,9 @@ public class Connector {
       hash = "anonymous";
       authHash = "anonymous";
       gitHubAppCredentials = null;
-    } else if (credentials instanceof GitHubAppCredentials) {
+    } else if (credentials instanceof IGitHubAppCredentials) {
       password = null;
-      gitHubAppCredentials = (GitHubAppCredentials) credentials;
+      gitHubAppCredentials = (IGitHubAppCredentials) credentials;
       hash =
           Util.getDigestOf(
               gitHubAppCredentials.getAppID()
@@ -438,7 +438,7 @@ public class Connector {
                       ImmutableAuthorizationProvider.fromLoginAndPassword(username, password));
                 }
                 return new GitHubConnection(
-                    gb.build(), cache, credentials instanceof GitHubAppCredentials);
+                    gb.build(), cache, credentials instanceof IGitHubAppCredentials);
               } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
               }
